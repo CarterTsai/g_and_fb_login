@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://apis.google.com/js/client:plusone.js" gapi_processed="true"></script>
+
+<script>
+    $(document).ready(function(){
+        var appId = '@Configuration["Facebook:appId"]';
+        var callback = '@Configuration["Facebook:callback"]';
+
+        $("#singinWithFacebook").click(function () {
+            location.href = "https://www.facebook.com/dialog/oauth?client_id="+appId+"&redirect_uri="+callback+"&response_type=token&scope=public_profile,email"
+        });
+
+        var client_id = '@Configuration["GooglePlus:client_id"]';
+
+        $("#singinWithGoogle").click(function () {
+
+                gapi.auth.authorize({
+                    client_id: client_id,
+                    scope: 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+                }, function (loginResp) {
+                    console.log(loginResp);
+                    if(!!loginResp.access_token) {
+                        $.post( '@Url.Action("LoginWithGooglePlus", "Home")', {"accessToken": loginResp.access_token},
+                            function(data){
+                                console.log(data);
+                            });
+                    }
+                });
+        });
+    });
+</script>
+
+<div class="text-center">
+    '@Url.Action("LoginWithGooglePlus", "Home")'
+    <div>
+        <a id="singinWithGoogle" href="#"><h1>Google</h1></a>
+    </div>
+    <div>
+        <a id="singinWithFacebook" href="#"><h1>FB</h1></a>
+    </div>
+</div>
