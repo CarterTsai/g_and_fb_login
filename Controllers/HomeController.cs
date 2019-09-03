@@ -58,7 +58,7 @@ namespace g_and_fb.Controllers
 
         public IActionResult LoginWithFacebook(string accessToken)
         {
-            var jsonResult = this.GetWebResponse("https://graph.facebook.com/v3.0/me?access_token=" + accessToken + "&fields=id%2Cname%2Cemail%2Cgender%2Cbirthday%2Cpicture&format=json&method=get&pretty=0&suppress_http_code=1", HttpMethod.Get);
+            var jsonResult = this.GetWebResponse("https://graph.facebook.com/v4.0/me?access_token=" + accessToken + "&fields=id%2Cname%2Cemail%2Cgender%2Cbirthday%2Cpicture&format=json&method=get&pretty=0&suppress_http_code=1", HttpMethod.Get);
             if (!String.IsNullOrEmpty(jsonResult))
             {
                 var response = JValue.Parse(jsonResult);
